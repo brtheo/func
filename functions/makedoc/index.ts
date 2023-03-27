@@ -24,7 +24,8 @@ type Id = string
     const quote ={
         type:'quote__c',
         fields: {
-            offerID__c: 'test',
+            name: offerID__c,
+            offerID__c,
             Origin__c : 'Web',
         }
     }

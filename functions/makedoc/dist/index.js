@@ -4,7 +4,7 @@ export default async function execute(event, context, logger) {
     const referenceTable = new Map();
     const uow = context.org.dataApi.newUnitOfWork();
     const quote = {
-        type: 'Quote__c',
+        type: 'quote__c',
         fields: {
             offerID__c: 'test',
             Origin__c: 'Web',

@@ -22,7 +22,7 @@ type Id = string
     const uow = context.org.dataApi.newUnitOfWork();
 
     const quote ={
-        type:'Quote__c',
+        type:'quote__c',
         fields: {
             offerID__c: 'test',
             Origin__c : 'Web',

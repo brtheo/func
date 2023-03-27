@@ -26,5 +26,21 @@ export default async function (event, context, logger) {
     `SELECT Id, Name, (SELECT Name, Email FROM Contacts) FROM Account WHERE Name LIKE '%${keyword}%'`
   );
   logger.info(JSON.stringify(results));
-  return results;
+
+  const quote ={
+    type:'Quote__c',
+    fields: {
+        offerID__c: 'test',
+        Origin__c : 'Web',
+    }
+}
+try {
+    const { id: recordId} = await context.org.dataApi.create(quote);
+    const soql = /*sql*/`SELECT offerID__c from Quote__c WHERE Id = ${recordId}`;
+    const res = await context.org.dataApi.query(soql);
+    return res;
+} catch (error) {
+    logger.error(error.message);
+    throw new Error(error.message);
+}
 }

@@ -30,23 +30,7 @@ export default async function execute(
 
   // Extract Org info metadata into its own object and return it
   const orgInfo: OrgInfo = new OrgInfo(context.org);
-  const quote ={
-    type:'Quote__c',
-    fields: {
-        offerID__c: 'test',
-        Origin__c : 'Web',
-    }
-}
-try {
-    const { id: recordId} = await context.org.dataApi.create(quote);
-    const soql = /*sql*/`SELECT offerID__c from Quote__c WHERE Id = ${recordId}`;
-    const res = await context.org.dataApi.query(soql);
-    return res;
-} catch (error) {
-    logger.error(error.message);
-    throw new Error(error.message);
-}
-  // return orgInfo;
+  return orgInfo;
 }
 
 // OrgInfo represents Org's metadata

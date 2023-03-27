@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "@heroku/sf-fx-runtime-nodejs": "^0.14.2",
-    "@types/html-pdf-node": "^1.0.0",
-    "html-pdf-node": "^1.0.8"
+    "base64-arraybuffer": "^1.0.2",
+    "jspdf": "^2.5.1"
   }
 }

@@ -1,12 +1,18 @@
 import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from "@heroku/sf-fx-runtime-nodejs";
 
-import html_to_pdf from 'html-pdf-node'
+import { jsPDF } from "jspdf";
+import {encode} from 'base64-arraybuffer'
 
 
  export default async function execute(event: InvocationEvent<any>, context: Context, logger: Logger): Promise<RecordQueryResult> {
     logger.info(`Invoking Makeprecontractdoc with payload ${JSON.stringify(event.data || {})}`);
 
-    const raw = await Promise.resolve(html_to_pdf.generatePdf({content:"<h1>hello world from html</h1>"}, {format:'A4'}))
+    const docPDF = new jsPDF();
+
+    docPDF.text("Hello world!", 10, 10);
+
+    const b = docPDF.output('arraybuffer')
+    const raw = encode(b)
     const data = 'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
                 'IC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAv' +
                 'TWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0K' +

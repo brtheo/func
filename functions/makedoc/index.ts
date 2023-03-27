@@ -30,7 +30,7 @@ type Id = string
     }
     try {
         const { id: recordId} = await context.org.dataApi.create(quote);
-        const soql = /*sql*/`SELECT offerID__c from Quote__c WHERE Id = ${recordId}`;
+        const soql = /*sql*/`SELECT offerID__c from quote__c WHERE Id = ${recordId}`;
         const res = await context.org.dataApi.query(soql);
         return res;
     } catch (error) {

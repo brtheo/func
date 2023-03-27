@@ -1,6 +1,6 @@
 import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from "@heroku/sf-fx-runtime-nodejs";
 
-import { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf/dist/jspdf.node.js";
 import {encode} from 'base64-arraybuffer'
 
 

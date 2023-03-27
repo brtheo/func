@@ -1,5 +1,6 @@
 import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from "@heroku/sf-fx-runtime-nodejs";
 
+import { PdfGenerator } from 'hpdf';
 import { jsPDF } from "jspdf/dist/jspdf.node.js";
 import {encode} from 'base64-arraybuffer'
 
@@ -7,6 +8,15 @@ import {encode} from 'base64-arraybuffer'
  export default async function execute(event: InvocationEvent<any>, context: Context, logger: Logger): Promise<RecordQueryResult> {
     logger.info(`Invoking Makeprecontractdoc with payload ${JSON.stringify(event.data || {})}`);
 
+    const generator = new PdfGenerator({
+        min: 3,
+        max: 10,
+    });
+
+    const helloWorld = await generator.generatePDF('<html lang="html">Hello World from html puppeteer!</html>');
+
+    const rawdata = encode(helloWorld)
+    await generator.stop();
     const docPDF = new jsPDF();
 
     docPDF.text("Hello world!", 10, 10);
@@ -34,7 +44,7 @@ import {encode} from 'base64-arraybuffer'
     const doc = {
         type: 'ContentVersion', 
         fields: {
-            VersionData: raw,
+            VersionData: rawdata,
 			PathOnClient: 'test.PDF',
 			Title: 'test'
         }

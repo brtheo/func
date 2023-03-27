@@ -36,7 +36,13 @@
   },
   "dependencies": {
     "@heroku/sf-fx-runtime-nodejs": "^0.14.2",
+    "@types/puppeteer": "^7.0.4",
     "base64-arraybuffer": "^1.0.2",
-    "jspdf": "^2.5.1"
+    "dompurify": "^3.0.1",
+    "hpdf": "^1.0.2",
+    "html2canvas": "^1.4.1",
+    "jsdom": "^21.1.1",
+    "jspdf": "^2.5.1",
+    "puppeteer": "^19.8.0"
   }
 }

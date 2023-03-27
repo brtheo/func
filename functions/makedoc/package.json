@@ -35,6 +35,8 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "@heroku/sf-fx-runtime-nodejs": "^0.14.2"
+    "@heroku/sf-fx-runtime-nodejs": "^0.14.2",
+    "@types/html-pdf-node": "^1.0.0",
+    "html-pdf-node": "^1.0.8"
   }
 }

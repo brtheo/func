@@ -1,21 +1,12 @@
 import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from "@heroku/sf-fx-runtime-nodejs";
-/**
- * Describe Makeprecontractdoc here.
- *
- * The exported method is the entry point for your code when the function is invoked.
- *
- * Following parameters are pre-configured and provided to your function on execution:
- * @param event: representative of the data associated with the occurrence of an event,
- * and supporting metadata about the source of that occurrence.
- * @param context: represents the connection to the the execution environment and the Customer 360 instance that
- * the function is associated with.
- * @param logger: represents the logging functionality to log given messages at various levels
- */
+
+import html_to_pdf from 'html-pdf-node'
 
 
  export default async function execute(event: InvocationEvent<any>, context: Context, logger: Logger): Promise<RecordQueryResult> {
     logger.info(`Invoking Makeprecontractdoc with payload ${JSON.stringify(event.data || {})}`);
 
+    const raw = await Promise.resolve(html_to_pdf.generatePdf({content:"<h1>hello world from html</h1>"}, {format:'A4'}))
     const data = 'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
                 'IC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAv' +
                 'TWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0K' +
@@ -30,23 +21,14 @@ import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from
                 'MDAwIG4gCjAwMDAwMDAzODAgMDAwMDAgbiAKdHJhaWxlcgo8PAogIC9TaXplIDYKICAvUm9v' +
                 'dCAxIDAgUgo+PgpzdGFydHhyZWYKNDkyCiUlRU9G'
 
-    const offerID__c = event.data.offerId
     const {quoteId} = event.data
 
-    // const quote ={
-    //     type:'quote__c',
-    //     fields: {
-    //         name: offerID__c,
-    //         offerID__c,
-    //         Origin__c : 'Web',
-    //     }
-    // }
     let ret;
     let docId: string;
     const doc = {
         type: 'ContentVersion', 
         fields: {
-            VersionData: data,
+            VersionData: raw,
 			PathOnClient: 'test.PDF',
 			Title: 'test'
         }

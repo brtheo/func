@@ -1,9 +1,33 @@
 import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from "@heroku/sf-fx-runtime-nodejs";
+import {PDFDocument} from 'pdf-lib';
+import fs from 'fs';
+import { PDFTextField } from "pdf-lib/cjs/api";
 
+type ValWithPDFTextField = [string, PDFTextField]
 
  export default async function execute(event: InvocationEvent<any>, context: Context, logger: Logger): Promise<RecordQueryResult> {
     logger.info(`Invoking Makeprecontractdoc with payload ${JSON.stringify(event.data || {})}`);
 
+    const FILE_PATH = 'templates/Template_Contrat_LLD_VCG.pdf';
+
+    const uint8Array = fs.readFileSync(FILE_PATH);
+    const pdfDoc = await PDFDocument.load(uint8Array);
+
+    const form = pdfDoc.getForm();
+    const fields = form.getFields();
+    const textFields = fields.map(field => form.getTextField(field.getName()));
+
+    const vars = new Map<string, string>(Object.entries(event.data.vars));
+
+    const templatedResults = new Map<string, ValWithPDFTextField>();
+    for( const [varname,val] of vars) {
+        const field = textFields.find(field => field.getName() === varname);
+        field.setText(val);
+        templatedResults.set(varname, [val, field]);
+    }
+
+    const pdfBytes = await pdfDoc.saveAsBase64();
+     
     
     
     const data = 'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
@@ -27,8 +51,8 @@ import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from
     const doc = {
         type: 'ContentVersion', 
         fields: {
-            VersionData: data,
-			PathOnClient: 'test2.PDF',
+            VersionData: pdfBytes,
+			PathOnClient: 'test3.PDF',
 			Title: 'test'
         }
     }

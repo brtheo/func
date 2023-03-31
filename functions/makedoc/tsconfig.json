@@ -5,10 +5,9 @@
         "rootDir": "./",
         "target": "es2017",
         "lib": [
-            "es2017",
-            "dom",
+            "es2017"
         ],
-        "types": ["node","puppeteer"],
+        "types": ["node"],
         "sourceMap": true,
         "moduleResolution": "node",
         "emitDecoratorMetadata": true,
@@ -18,7 +17,6 @@
         "pretty": true
     },
     "include": [
-        "index.ts",
-        "node_modules/@types/puppeteer/index.d.ts"
+        "index.ts"
     ]
 }

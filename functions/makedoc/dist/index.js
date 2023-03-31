@@ -1,19 +1,5 @@
-import { PdfGenerator } from 'hpdf';
-import { jsPDF } from "jspdf/dist/jspdf.node.js";
-import { encode } from 'base64-arraybuffer';
 export default async function execute(event, context, logger) {
     logger.info(`Invoking Makeprecontractdoc with payload ${JSON.stringify(event.data || {})}`);
-    const generator = new PdfGenerator({
-        min: 3,
-        max: 10,
-    });
-    const helloWorld = await generator.generatePDF('<html lang="html">Hello World from html puppeteer!</html>');
-    const rawdata = encode(helloWorld);
-    await generator.stop();
-    const docPDF = new jsPDF();
-    docPDF.text("Hello world!", 10, 10);
-    const b = docPDF.output('arraybuffer');
-    const raw = encode(b);
     const data = 'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
         'IC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAv' +
         'TWVkaWFCb3ggWyAwIDAgMjAwIDIwMCBdCiAgL0NvdW50IDEKICAvS2lkcyBbIDMgMCBSIF0K' +
@@ -33,8 +19,8 @@ export default async function execute(event, context, logger) {
     const doc = {
         type: 'ContentVersion',
         fields: {
-            VersionData: rawdata,
-            PathOnClient: 'test.PDF',
+            VersionData: data,
+            PathOnClient: 'test2.PDF',
             Title: 'test'
         }
     };

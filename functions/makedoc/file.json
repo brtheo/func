@@ -1,4 +1,36 @@
 {
-  "offerId":"testeur",
-  "quoteId": "a000900000cBQJIAA4"
+  "vars": [
+      "SLF_PAR_MADAT", 
+      "SLF_PAR_BIRTHDATE", 
+      "SLF_PAR_BIRTHPLACE", 
+      "SLF_PAR_ADDR", 
+      "SLF_PAR_MAIL", 
+      "SLF_PAR_TEL",
+      "SLF_FUG_NAME", 
+      "SLF_FUG_NUM"
+  ]
+}
+{
+  "vars": {
+      "SLF_PAR_MADAT": "101J3433B", 
+      "SLF_PAR_BIRTHDATE": "05/09/1955", 
+      "SLF_PAR_BIRTHPLACE": "Paris XV", 
+      "SLF_PAR_ADDR": "1 rue de la paix", 
+      "SLF_PAR_MAIL": "test@email.com", 
+      "SLF_PAR_TEL": "06 43 34 54 45",
+      "SLF_FUG_NAME": "Peugeot E208", 
+      "SLF_FUG_NUM": "1"
+  }
+}
+{
+  "mapping": {
+      "SLF_PAR_MADAT": "noContrat__c",
+      "SLF_PAR_BIRTHDATE":  "birthdate__c",
+      "SLF_PAR_BIRTHPLACE": "birthplace__c",
+      "SLF_PAR_ADDR":  "address__c",
+      "SLF_PAR_MAIL": "emailaddress__c",
+      "SLF_PAR_TEL":  "phonenumber__c",
+      "SLF_FUG_NAME": "fundedgoodname__c",
+      "SLF_FUG_NUM":  "fundedgoodnumber__c",
+  }
 }

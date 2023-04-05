@@ -1,11 +1,15 @@
-import { InvocationEvent, Context, Logger, RecordQueryResult, ReferenceId } from "@heroku/sf-fx-runtime-nodejs";
+import { InvocationEvent, Context, Logger, RecordQueryResult } from "@heroku/sf-fx-runtime-nodejs";
 import {PDFDocument} from 'pdf-lib';
 import fs from 'fs';
 import { PDFTextField } from "pdf-lib/cjs/api";
 
 type ValWithPDFTextField = [string, PDFTextField]
+type MakeDocPayload = {
+    quoteId: string,
+    vars: string[]
+}
 
- export default async function execute(event: InvocationEvent<any>, context: Context, logger: Logger): Promise<RecordQueryResult> {
+ export default async function execute(event: InvocationEvent<MakeDocPayload>, context: Context, logger: Logger): Promise<RecordQueryResult> {
     logger.info(`Invoking Makeprecontractdoc with payload ${JSON.stringify(event.data || {})}`);
 
     const FILE_PATH = 'templates/Template_Contrat_LLD_VCG.pdf';
@@ -17,10 +21,11 @@ type ValWithPDFTextField = [string, PDFTextField]
     const fields = form.getFields();
     const textFields = fields.map(field => form.getTextField(field.getName()));
 
-    const vars = new Map<string, string>(Object.entries(event.data.vars));
+    // const vars = new Map<string, string>(Object.entries(event.data.vars));
 
+    const varsMap = await makeVarsMap(event.data, context)
     const templatedResults = new Map<string, ValWithPDFTextField>();
-    for( const [varname,val] of vars) {
+    for( const [varname,val] of varsMap) {
         const field = textFields.find(field => field.getName() === varname);
         field.setText(val);
         templatedResults.set(varname, [val, field]);
@@ -80,4 +85,32 @@ type ValWithPDFTextField = [string, PDFTextField]
     return ret;
 
 
+}
+
+async function makeVarsMap({vars, quoteId}: MakeDocPayload, context: Context) {
+    const mapping =  {
+        "SLF_PAR_MADAT": "noContrat__c",
+        "SLF_PAR_BIRTHDATE":  "birthdate__c",
+        "SLF_PAR_BIRTHPLACE": "birthplace__c",
+        "SLF_PAR_ADDR":  "address__c",
+        "SLF_PAR_MAIL": "emailaddress__c",
+        "SLF_PAR_TEL":  "phonenumber__c",
+        "SLF_FUG_NAME": "fundedgoodname__c",
+        "SLF_FUG_NUM":  "fundedgoodnumber__c"
+    }
+    const m = new Map<string,string>(Object.entries(mapping))
+    const reversedMap = new Map<string,string>()
+    for( const [k,v] of m) {
+        reversedMap.set(v,k)
+    }
+    const soql = `SELECT ${vars.map(varName => m.get(varName)).join(',')} from Quote__c WHERE id = '${quoteId}'`; 
+    const res = await context.org.dataApi.query(soql);
+    const {fields} = res.records[0];
+    
+    return new Map<string, string>(
+        Object.values(mapping).map(v => [
+            reversedMap.get(v),
+            fields[v] as string
+         ])
+    );
 }

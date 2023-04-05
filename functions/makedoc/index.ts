@@ -107,10 +107,10 @@ async function makeVarsMap({vars, quoteId}: MakeDocPayload, context: Context) {
     const res = await context.org.dataApi.query(soql);
     const {fields} = res.records[0];
     
-    return new Map<string, unknown>(
+    return new Map<string, string>(
         Object.values(mapping).map(v => [
             reversedMap.get(v),
-            fields[v]
+            fields[v].toString()
          ])
     );
 }
